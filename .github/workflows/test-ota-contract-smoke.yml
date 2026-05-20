@@ -2,6 +2,12 @@ name: 'Test: Ota contract matrix'
 
 on:
   workflow_dispatch:
+    inputs:
+      ota_ref:
+        description: 'Optional Ota git branch/tag/sha for source install (leave empty to use ota-run/setup@v1)'
+        required: false
+        default: ''
+        type: string
   pull_request:
     paths:
       - 'ota.yaml'
@@ -77,9 +83,18 @@ jobs:
           pnpm --version
 
       - name: Setup Ota
+        if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
           ota-version: 1.6.14
+
+      - name: Setup Ota (source ref override)
+        if: ${{ github.event.inputs.ota_ref != '' }}
+        shell: bash
+        env:
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref }}
+        run: |
+          curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
       - name: Verify ota install [bash]
         if: matrix.run_shell == 'bash'
@@ -173,9 +188,18 @@ jobs:
           node-version: 24
 
       - name: Setup Ota
+        if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
           ota-version: 1.6.14
+
+      - name: Setup Ota (source ref override)
+        if: ${{ github.event.inputs.ota_ref != '' }}
+        shell: bash
+        env:
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref }}
+        run: |
+          curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
       - name: Verify Docker and ota
         shell: bash
