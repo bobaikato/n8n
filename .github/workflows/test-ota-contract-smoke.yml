@@ -86,7 +86,7 @@ jobs:
         if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
-          ota-version: 1.6.17
+          ota-version: 1.6.18
 
       - name: Setup Ota (source ref override)
         if: ${{ github.event.inputs.ota_ref != '' }}
@@ -211,7 +211,7 @@ jobs:
         if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
-          ota-version: 1.6.17
+          ota-version: 1.6.18
 
       - name: Setup Ota (source ref override)
         if: ${{ github.event.inputs.ota_ref != '' }}
