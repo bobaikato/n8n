@@ -86,7 +86,7 @@ jobs:
         if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
-          ota-version: 1.6.14
+          ota-version: 1.6.17
 
       - name: Setup Ota (source ref override)
         if: ${{ github.event.inputs.ota_ref != '' }}
@@ -115,7 +115,11 @@ jobs:
           ota validate .
           ota tasks --workflow app .
           ota tasks --workflow backend .
+          ota tasks --workflow frontend .
+          ota tasks --workflow ai .
+          ota tasks --workflow runtime .
           ota tasks --workflow instant .
+          ota tasks --workflow docker .
           ota execution topology --json .
 
       - name: Validate contract and inspect workflows [pwsh]
@@ -125,8 +129,24 @@ jobs:
           ota validate .
           ota tasks --workflow app .
           ota tasks --workflow backend .
+          ota tasks --workflow frontend .
+          ota tasks --workflow ai .
+          ota tasks --workflow runtime .
           ota tasks --workflow instant .
+          ota tasks --workflow docker .
           ota execution topology --json .
+
+      - name: Dry-run all non-internal tasks (native coverage lane)
+        if: matrix.full_backend && matrix.run_shell == 'bash'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ota tasks --json . > .ota-tasks-all.json
+          jq -r '.tasks[] | .name' .ota-tasks-all.json > .ota-task-names.txt
+          while IFS= read -r task_name; do
+            echo ">>> [dry-run] ${task_name}"
+            ota run "${task_name}" --dry-run --json .
+          done < .ota-task-names.txt
 
       - name: Proof packaged quickstart workflow
         id: instant
@@ -191,7 +211,7 @@ jobs:
         if: ${{ github.event.inputs.ota_ref == '' }}
         uses: ota-run/setup@v1
         with:
-          ota-version: 1.6.14
+          ota-version: 1.6.17
 
       - name: Setup Ota (source ref override)
         if: ${{ github.event.inputs.ota_ref != '' }}

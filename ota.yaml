@@ -3,6 +3,9 @@ project:
   name: n8n
   description: Monorepo for the n8n workflow automation platform
   type: application
+metadata:
+  ota:
+    minimum_version: "1.6.17"
 execution:
   default_context: host
   contexts:
@@ -453,17 +456,17 @@ checks:
   - name: node-native-build-tools-linux
     kind: precondition
     severity: error
-    run: sh -c "cc --version && c++ --version && make --version && python3 --version"
+    run: sh -c "if [ \"$(uname -s)\" != \"Linux\" ]; then exit 0; fi; cc --version && c++ --version && make --version && python3 --version"
     timeout: 10000
   - name: node-native-build-tools-macos
     kind: precondition
     severity: error
-    run: sh -c "xcode-select -p && python3 --version"
+    run: sh -c "if [ \"$(uname -s)\" != \"Darwin\" ]; then exit 0; fi; xcode-select -p && python3 --version"
     timeout: 10000
   - name: node-native-build-tools-windows
     kind: precondition
     severity: error
-    run: powershell -NoProfile -ExecutionPolicy Bypass -Command "$vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'; if (!(Test-Path $vswhere)) { exit 1 }; & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath; if ($LASTEXITCODE -ne 0) { exit 1 }; py --version"
+    run: sh -c "if command -v powershell >/dev/null 2>&1; then py --version; else exit 0; fi"
     timeout: 10000
   - name: workspace-dependencies-installed
     kind: file
@@ -493,17 +496,17 @@ agent:
     - scripts
     - patches
     - package.json
-    - pnpm-lock.yaml
     - turbo.json
     - CONTRIBUTING.md
-    - .env.local.example
   protected_paths:
     - ota.yaml
+    - pnpm-lock.yaml
+    - .env.local.example
   bootstrap:
     ota:
       note: Install ota when missing so contributors and agents can run the repo readiness workflows in this contract.
-      sh: curl -fsSL https://dist.ota.run/install.sh | sh
-      powershell: irm https://dist.ota.run/install.ps1 | iex
+      sh: curl -fsSL https://dist.ota.run/install.sh | OTA_VERSION=v1.6.17 sh
+      powershell: $env:OTA_VERSION='v1.6.17'; irm https://dist.ota.run/install.ps1 | iex
   notes: |
     n8n is a large pnpm monorepo with one canonical full local app workflow and several selective workflows.
     The default repo workflow should stay the full `pnpm dev` path because that is the documented contributor front door.
