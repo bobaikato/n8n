@@ -6,7 +6,7 @@ on:
       ota_ref:
         description: 'Optional Ota git branch/tag/sha for source install'
         required: false
-        default: '1.6.18-implementation'
+        default: 'main'
         type: string
   pull_request:
     paths:
@@ -85,7 +85,7 @@ jobs:
       - name: Setup Ota (source ref)
         shell: bash
         env:
-          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || '1.6.18-implementation' }}
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || 'main' }}
         run: |
           curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
@@ -203,7 +203,7 @@ jobs:
       - name: Setup Ota (source ref)
         shell: bash
         env:
-          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || '1.6.18-implementation' }}
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || 'main' }}
         run: |
           curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
