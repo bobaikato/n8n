@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       ota_ref:
-        description: 'Optional Ota git branch/tag/sha for source install (leave empty to use ota-run/setup@v1)'
+        description: 'Optional Ota git branch/tag/sha for source install'
         required: false
-        default: ''
+        default: '1.6.18-implementation'
         type: string
   pull_request:
     paths:
@@ -82,17 +82,10 @@ jobs:
           corepack prepare pnpm@10.32.1 --activate
           pnpm --version
 
-      - name: Setup Ota
-        if: ${{ github.event.inputs.ota_ref == '' }}
-        uses: ota-run/setup@v1
-        with:
-          ota-version: 1.6.18
-
-      - name: Setup Ota (source ref override)
-        if: ${{ github.event.inputs.ota_ref != '' }}
+      - name: Setup Ota (source ref)
         shell: bash
         env:
-          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref }}
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || '1.6.18-implementation' }}
         run: |
           curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
@@ -207,17 +200,10 @@ jobs:
         with:
           node-version: 24
 
-      - name: Setup Ota
-        if: ${{ github.event.inputs.ota_ref == '' }}
-        uses: ota-run/setup@v1
-        with:
-          ota-version: 1.6.18
-
-      - name: Setup Ota (source ref override)
-        if: ${{ github.event.inputs.ota_ref != '' }}
+      - name: Setup Ota (source ref)
         shell: bash
         env:
-          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref }}
+          OTA_GIT_BRANCH: ${{ github.event.inputs.ota_ref || '1.6.18-implementation' }}
         run: |
           curl -fsSL https://dist.ota.run/install.sh | sh -s -- --from-git --setup-path
 
