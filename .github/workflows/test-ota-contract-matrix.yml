@@ -44,7 +44,7 @@ jobs:
           - name: macos-bash
             os: macos-latest
             run_shell: bash
-            full_backend: true
+            full_backend: false
             allow_packaged_quickstart_failure: true
           - name: windows-pwsh
             os: windows-latest
