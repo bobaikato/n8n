@@ -200,7 +200,11 @@ tasks:
       This is the documented full development mode.
       It runs the broader local development stack in parallel and is the canonical repo workflow.
     category: dev
-    run: pnpm dev
+    launch:
+      kind: command
+      exe: pnpm
+      args:
+        - dev
     requirements:
       toolchains:
         - node
@@ -225,7 +229,11 @@ tasks:
       This is the documented selective development path when frontend packages are not needed.
       It is the narrower default agent runtime because it exposes one stable backend service surface.
     category: dev
-    run: pnpm dev:be
+    launch:
+      kind: command
+      exe: pnpm
+      args:
+        - dev:be
     requirements:
       toolchains:
         - node
@@ -246,7 +254,11 @@ tasks:
     notes: |
       This runs the editor-ui and design system development surfaces without the broader backend watch graph.
     category: dev
-    run: pnpm dev:fe
+    launch:
+      kind: command
+      exe: pnpm
+      args:
+        - dev:fe
     requirements:
       toolchains:
         - node
@@ -267,7 +279,11 @@ tasks:
     notes: |
       This is the documented selective development path for AI and LangChain node work.
     category: dev
-    run: pnpm dev:ai
+    launch:
+      kind: command
+      exe: pnpm
+      args:
+        - dev:ai
     requirements:
       toolchains:
         - node
@@ -288,7 +304,11 @@ tasks:
       Use this after a successful build when you want the production-style local runtime path
       rather than the watch-mode development workflow.
     category: dev
-    run: pnpm start
+    launch:
+      kind: command
+      exe: pnpm
+      args:
+        - start
     requirements:
       toolchains:
         - node
@@ -505,8 +525,8 @@ agent:
   bootstrap:
     ota:
       note: Install ota when missing so contributors and agents can run the repo readiness workflows in this contract.
-      sh: curl -fsSL https://dist.ota.run/install.sh | OTA_VERSION=v1.6.20 sh
-      powershell: $env:OTA_VERSION='v1.6.20'; irm https://dist.ota.run/install.ps1 | iex
+      sh: curl -fsSL https://dist.ota.run/install.sh | OTA_VERSION=v1.6.21 sh
+      powershell: $env:OTA_VERSION='v1.6.21'; irm https://dist.ota.run/install.ps1 | iex
   notes: |
     n8n is a large pnpm monorepo with one canonical full local app workflow and several selective workflows.
     The default repo workflow should stay the full `pnpm dev` path because that is the documented contributor front door.
