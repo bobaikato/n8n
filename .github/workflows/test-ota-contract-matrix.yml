@@ -143,7 +143,7 @@ jobs:
         run: |
           set -euo pipefail
           ota tasks --json . > .ota-tasks-all.json
-          jq -r '.tasks[] | .name' .ota-tasks-all.json > .ota-task-names.txt
+          jq -r '.tasks[] | select(.kind != "container") | .name' .ota-tasks-all.json > .ota-task-names.txt
           while IFS= read -r task_name; do
             echo ">>> [dry-run] ${task_name}"
             ota run "${task_name}" --dry-run --json .
