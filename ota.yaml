@@ -13,10 +13,12 @@ execution:
       backend: native
 toolchains:
   node:
-    provider: corepack
     version: ">=22.16"
     package_managers:
       pnpm: "10.32.1"
+    fulfillment:
+      source: corepack
+      mode: run
 tools:
   npx:
     version: ">=10.22.0"
